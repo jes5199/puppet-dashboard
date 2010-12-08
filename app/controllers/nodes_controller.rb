@@ -131,6 +131,17 @@ class NodesController < InheritedResources::Base
       format.html { render :index }
       format.yaml { render :text => collection.to_yaml, :content_type => 'application/x-yaml' }
       format.json { render :json => collection.to_json }
+      format.csv  do
+        csv = CSV.generate_line(["node","status","last report time"]) + "\n"
+        csv += collection.map do |node|
+          if node.last_report
+            CSV.generate_line([node.name, node.last_report.status, node.last_report.time])
+          else
+            CSV.generate_line([node.name, nil, nil])
+          end
+        end.join("\n")
+        render :text => csv, :content_type => 'text/csv'
+      end
     end
   end
 end

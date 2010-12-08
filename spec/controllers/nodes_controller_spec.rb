@@ -140,6 +140,44 @@ describe NodesController do
         end
       end
     end
+
+    context "as CSV" do
+      it "should return CSV" do
+        get :index, :format => "csv"
+
+        response.should be_success
+        results = CSV.parse(response.body)
+        results.should == [
+          ["node", "status", "last report time"],
+          [@node.name, nil, nil]
+        ]
+      end
+
+      it "should return CSV" do
+        time = Time.parse("2010-01-01 00:00 UTC")
+        Report.generate_for(@node, time, "failed")
+        get :index, :format => "csv"
+
+        response.should be_success
+        results = CSV.parse(response.body)
+        results.should == [
+          ["node", "status", "last report time"],
+          [@node.name, "failed", "2010-01-01 00:00 UTC"]
+        ]
+      end
+
+      it "should return CSV even when there are no matching nodes" do
+        get :index, :format => "csv", :current => true, :successful => true
+
+        response.should be_success
+        results = CSV.parse(response.body)
+        results.should == [
+          ["node", "status", "last report time"],
+        ]
+      end
+
+    end
+
   end
 
   describe '#edit' do
