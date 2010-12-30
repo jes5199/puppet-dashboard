@@ -78,10 +78,6 @@ class Report < ActiveRecord::Base
     diff_stuff
   end
 
-  def resources
-    self.report.resource_statuses.keys
-  end
-
   def self.attribute_hash_from(report_hash)
     attribute_hash = report_hash.dup
     attribute_hash["logs_attributes"] = attribute_hash.delete("logs")
