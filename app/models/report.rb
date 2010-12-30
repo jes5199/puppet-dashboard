@@ -69,8 +69,8 @@ class Report < ActiveRecord::Base
       comparison_resource = comparison_resources[resource_name] || {}
       our_resource = our_resources[resource_name] || {}
       (comparison_resource.keys | our_resource.keys).each do |property|
+        diff_stuff[resource_name] ||= {}
         if our_resource[property] != comparison_resource[property]
-          diff_stuff[resource_name] ||= {}
           diff_stuff[resource_name][property.to_sym] = [ our_resource[property], comparison_resource[property] ]
         end
       end
