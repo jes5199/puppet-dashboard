@@ -62,10 +62,10 @@ class ReportsController < InheritedResources::Base
   end
 
   def search
-    if params[:only_search_latest]
-      inspected_resources = ResourceStatus.on_latest_inspections
-    else
+    if params[:search_all_inspect_reports]
       inspected_resources = ResourceStatus.inspections
+    else
+      inspected_resources = ResourceStatus.latest_inspections
     end
     inspected_resources = inspected_resources.order("reports.time DESC")
 
