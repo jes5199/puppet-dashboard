@@ -103,4 +103,34 @@ jQuery(document).ready(function(J) {
     J(this).hide();
   });
 
+  function highlight_partial_match(prefix, str, highlighter){
+    document.title = str;
+    J("tr").each(function(i, row){
+      var highlight = false;
+      if(str){
+        J(row.className.split(/\s+/)).each(function(k, klass){
+          if(klass.indexOf(prefix + str) != -1){
+            highlight = true;
+          }
+        })
+      }
+      J(row).toggleClass(highlighter, highlight);
+    });
+  }
+
+  function grab_checksum_class( str ){
+    var r;
+    J(str.split(/\s+/)).each(function(k, klass){
+      if( klass.indexOf("checksum_") != -1 ){
+        r = klass.substr(9);
+      }
+    });
+    return r;
+  }
+
+  J("#file_content").keypress(  function(){ setTimeout(function(){ highlight_partial_match( "checksum_", J('#file_content').val(), "highlighted")}, 1)} );
+  J("tr").mousemove( function(e){ highlight_partial_match( "checksum_", grab_checksum_class( this.className ), "mouse_highlighted")} );
+  J("tr").click( function(e){ J('#file_content').val(grab_checksum_class( this.className )) ; J("#file_content").keypress();} );
+
 });
+

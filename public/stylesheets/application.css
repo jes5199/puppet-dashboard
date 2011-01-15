@@ -405,3 +405,18 @@ body {
   body div.token-input-dropdown-facebook ul li.token-input-selected-dropdown-item-facebook {
     background-color: #FFFDA4;
     color: #000; }
+
+
+tr.mouse_highlighted {
+  background-color: #FFFFCC !important;
+}
+tr.mouse_highlighted:nth-child(even) td {
+  background: #FFFFAA !important;
+}
+tr.highlighted {
+  background-color: #CCFFCC !important;
+}
+tr.highlighted:nth-child(even) td {
+  background: #AAFFAA !important;
+}
+
