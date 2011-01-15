@@ -69,29 +69,35 @@ class ReportsController < InheritedResources::Base
     end
     inspected_resources = inspected_resources.order("reports.time DESC")
 
-    if params[:file_title].present? and params[:file_content].present?
-      @files = inspected_resources.by_file_title(params[:file_title])
-      if params[:content_match] == "negative"
-        @files = @files.without_file_content(params[:file_content])
-      else
-        @files = @files.by_file_content(params[:file_content])
-      end
+ #  if params[:file_title].present? and params[:file_content].present?
+ #    @files = inspected_resources.by_file_title(params[:file_title])
+ #    if params[:content_match] == "negative"
+ #      @files = @files.without_file_content(params[:file_content])
+ #    else
+ #      @files = @files.by_file_content(params[:file_content])
+ #    end
 
-    elsif params[:file_title].present?
-      @files = inspected_resources.by_file_title(params[:file_title])
-
-    elsif params[:file_content].present?
-      if params[:content_match] == "negative"
-        @files = inspected_resources.in_a_report_without_content(params[:file_content])
-      else
-        @files = inspected_resources.by_file_content(params[:file_content])
-      end
-
-    else
+    if ! params[:file_title]
       @files = nil
       return
+    elsif params[:file_title].present?
+      @files = inspected_resources.by_file_title(params[:file_title])
+    else
+      @files = inspected_resources
     end
-    @files = paginate_scope @files
+    
+    @md5s = []
+    @sets = { nil => [] }
+    @files.each do |r|
+      content = r.events.find_by_property("content").previous_value rescue nil
+      if content and ! @sets.has_key? content
+        @md5s << content
+        @sets[content] = []
+      end
+      @sets[content] << r
+    end
+
+    #@files = paginate_scope @files
   end
 
   private
