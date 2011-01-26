@@ -22,7 +22,7 @@
               %th Property
               %th Actual
               %th Baseline
-            - diff[ resource ].each do |property, expected_actual|
+            - diff[ resource ].sort_by{|property, expected_actual| property == :ensure ? "" : property.to_s }.each do |property, expected_actual|
               %tr
                 - baseline, actual = expected_actual
                 %td= h property
