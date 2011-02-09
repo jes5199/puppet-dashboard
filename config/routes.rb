@@ -37,6 +37,6 @@ PuppetDashboard::Application.routes.draw do
 
   match 'reports/upload' => 'reports#upload', :as => :upload, :via => :post
   match '/release_notes' => 'pages#release_notes', :as => :release_notes
-  match '/' => 'pages#home'
+  match '/' => 'pages#home', :as => :root
   match '/:controller(/:action(/:id))'
 end
