@@ -17,12 +17,12 @@ class Node < ActiveRecord::Base
   belongs_to :last_apply_report, :class_name => 'Report'
   belongs_to :last_inspect_report, :class_name => 'Report'
 
-  named_scope :with_last_report, :include => :last_apply_report
-  named_scope :by_report_date, :order => 'reported_at DESC'
+  scope :with_last_report, :include => :last_apply_report
+  scope :by_report_date, :order => 'reported_at DESC'
 
-  named_scope :search, lambda{|q| q.blank? ? {} : {:conditions => ['name LIKE ?', "%#{q}%"]} }
+  scope :search, lambda{|q| q.blank? ? {} : {:conditions => ['name LIKE ?', "%#{q}%"]} }
 
-  named_scope :by_latest_report, proc { |order|
+  scope :by_latest_report, proc { |order|
     direction = {1 => 'ASC', 0 => 'DESC'}[order]
     direction ? {:order => "reported_at #{direction}"} : {}
   }
@@ -44,7 +44,7 @@ class Node < ActiveRecord::Base
   # * current and failing: Return only nodes that are currently failing.
   # * non-current and successful: Return any nodes that ever had a successful report.
   # * non-current and failing: Return any nodes that ever had a failing report.
-  named_scope :by_currentness_and_successfulness, lambda {|currentness, successfulness|
+  scope :by_currentness_and_successfulness, lambda {|currentness, successfulness|
     operator = successfulness ? '!=' : '='
     if currentness
       { :conditions => ["nodes.status #{operator} 'failed' AND nodes.last_apply_report_id is not NULL"]  }
@@ -57,17 +57,17 @@ class Node < ActiveRecord::Base
     end
   }
 
-  named_scope :reported, :conditions => ["reported_at IS NOT NULL"]
+  scope :reported, :conditions => ["reported_at IS NOT NULL"]
 
   # Return nodes that have never reported.
-  named_scope :unreported, :conditions => {:reported_at => nil}
+  scope :unreported, :conditions => {:reported_at => nil}
 
   # Return nodes that haven't reported recently.
-  named_scope :no_longer_reporting, lambda{{:conditions => ['reported_at < ?', SETTINGS.no_longer_reporting_cutoff.seconds.ago] }}
+  scope :no_longer_reporting, lambda{{:conditions => ['reported_at < ?', SETTINGS.no_longer_reporting_cutoff.seconds.ago] }}
 
-  named_scope :hidden, :conditions => {:hidden => true}
+  scope :hidden, :conditions => {:hidden => true}
 
-  named_scope :unhidden, :conditions => {:hidden => false}
+  scope :unhidden, :conditions => {:hidden => false}
 
   def self.label_for_currentness_and_successfulness(currentness, successfulness)
     return "#{currentness ? 'Currently' : 'Ever'} #{successfulness ? (currentness ? 'successful' : 'succeeded') : (currentness ? 'failing' : 'failed')}"
