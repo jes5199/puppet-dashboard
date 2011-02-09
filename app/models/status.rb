@@ -66,6 +66,13 @@ class Status
   private
 
   def self.execute(sql)
-    ActiveRecord::Base.connection.execute(sql).all_hashes.map{|datum| new datum}
+    results = ActiveRecord::Base.connection.execute(sql)
+
+    results.map do |row|
+      datum = {}
+      results.fields.zip(row).each{|key, value| datum[key] = value }
+      new(datum)
+    end
+
   end
 end
