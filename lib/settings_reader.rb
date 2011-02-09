@@ -40,7 +40,7 @@ class SettingsReader
       message << "Using default values for unspecified settings " << unspecified_keys.sort.map(&:inspect).to_sentence
     end
 
-    RAILS_DEFAULT_LOGGER.info(message) rescue nil
+    Rails.logger.info(message) rescue nil
 
     return OpenStruct.new(settings)
   end
