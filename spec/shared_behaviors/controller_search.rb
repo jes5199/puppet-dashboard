@@ -1,4 +1,4 @@
-describe "with search by q and tag", :shared => true do
+shared_examples_for "with search by q and tag" do
   describe "without a search" do
     before { get 'index' }
     subject { assigns[:node_groups] }
@@ -27,7 +27,7 @@ describe "with search by q and tag", :shared => true do
   end
 end
 
-describe "without JSON pagination", :shared => true do
+shared_examples_for "without JSON pagination" do
   describe "GET index" do
     before :each do
       @for_tag = NodeGroup.generate(:name => 'for_tag')
