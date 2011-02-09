@@ -20,3 +20,4 @@ group :development, :test do
   gem "autotest"
 end
 gem "mocha", :group => :test
+gem "mysql2"
