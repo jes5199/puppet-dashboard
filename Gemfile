@@ -4,6 +4,7 @@ gem 'rails', '3.0.3'
 gem 'haml'
 gem 'will_paginate'
 gem 'maruku'
+gem 'inherited_resources', '~> 1.2.1'
 
 gem 'jquery-rails', '>= 0.2.6'
 
