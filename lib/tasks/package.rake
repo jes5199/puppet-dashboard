@@ -11,7 +11,7 @@ namespace :package do
 
       begin
         sh cmd
-        puts "** Created package: "+ latest_file(File.expand_path(File.join(RAILS_ROOT, 'tmp', 'packages', 'deb', '*.deb')))
+        puts "** Created package: "+ latest_file(File.expand_path(File.join(Rails.root, 'tmp', 'packages', 'deb', '*.deb')))
       rescue
         puts <<-HERE
 !! Building the .deb failed!
@@ -44,7 +44,7 @@ namespace :package do
     version = File.open('VERSION', 'r').read.sub(/^v/, '').chomp
     sh "git archive --format=tar --prefix=puppet-dashboard-#{version}/ HEAD | gzip > #{rpm_macro_value('_sourcedir')}/puppet-dashboard-#{version}.tar.gz"
     cd File.expand_path(rpm_macro_value('_specdir')) do
-      cp File.join(RAILS_ROOT, 'ext', 'packaging', 'redhat', 'puppet-dashboard.spec'), 'puppet-dashboard.spec'
+      cp File.join(Rails.root, 'ext', 'packaging', 'redhat', 'puppet-dashboard.spec'), 'puppet-dashboard.spec'
 
       cmd = 'rpmbuild -ba'
       cmd << ' --sign' unless ENV['UNSIGNED'] == '1'
@@ -93,7 +93,7 @@ $RPM_BUILD_ROOT %{buildroot}
   desc "Create a release .tar.gz"
   task :tar do
     version        = File.open('VERSION', 'r').read.sub(/^v/, '').chomp
-    work           = File.expand_path(File.join(RAILS_ROOT, 'tmp', 'packages', 'tar'))
+    work           = File.expand_path(File.join(Rails.root, 'tmp', 'packages', 'tar'))
     release_prefix = "puppet-dashboard-#{version}"
     release_file   = File.join work, "#{release_prefix}.tar.gz"
 
@@ -131,7 +131,7 @@ Saved release to: #{release_file}
   end
 
   def create_workspace(package_type)
-    work = File.expand_path(File.join(RAILS_ROOT, 'tmp', 'packages', package_type))
+    work = File.expand_path(File.join(Rails.root, 'tmp', 'packages', package_type))
     build = File.join(work, 'build')
 
     rm_rf work
@@ -150,6 +150,6 @@ Saved release to: #{release_file}
 
   # Resolve an RPM macro.
   def rpm_macro_value(macro)
-    `rpmbuild -E '%#{macro}' #{File.join(RAILS_ROOT, 'ext', 'packaging', 'redhat', 'puppet-dashboard.spec')} 2> /dev/null`.chomp
+    `rpmbuild -E '%#{macro}' #{File.join(Rails.root, 'ext', 'packaging', 'redhat', 'puppet-dashboard.spec')} 2> /dev/null`.chomp
   end
 end

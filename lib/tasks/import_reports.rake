@@ -1,4 +1,4 @@
-require "#{RAILS_ROOT}/lib/progress_bar"
+require "#{Rails.root}/lib/progress_bar"
 namespace :reports do
   DEFAULT_DIR = '/var/lib/puppet/reports/'
 

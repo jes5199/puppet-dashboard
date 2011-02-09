@@ -18,7 +18,7 @@ class SettingsReader
   def self.read
     normal_file = "config/settings.yml"
     sample_file = "config/settings.yml.example"
-    rails_root = RAILS_ROOT rescue File.dirname(File.dirname(__FILE__))
+    rails_root = Rails.root rescue File.dirname(File.dirname(__FILE__))
 
     message = "** SettingsReader - "
 
@@ -46,7 +46,7 @@ class SettingsReader
   end
 
   def self.default_settings
-    rails_root = RAILS_ROOT rescue File.dirname(File.dirname(__FILE__))
+    rails_root = Rails.root rescue File.dirname(File.dirname(__FILE__))
     OpenStruct.new(self.filename_to_hash(File.join(rails_root, "config/settings.yml.example")))
   end
 
