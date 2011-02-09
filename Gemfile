@@ -23,3 +23,4 @@ group :development, :test do
 end
 gem "mocha", :group => :test
 gem "mysql2"
+gem "json"
