@@ -1,38 +1,42 @@
-ActionController::Routing::Routes.draw do |map|
-  map.resources :node_classes, :collection => {:search => :get} do |classes|
-    classes.resources :nodes, :requirements => {:id => /.*/}
+PuppetDashboard::Application.routes.draw do
+  resources :node_classes do
+  
+  
+      resources :nodes
   end
 
-  map.resources :node_groups,
-    :member     => { :diff  => :get },
-    :collection => {:search => :get } do |groups|
-      groups.resources :nodes, :requirements => {:id => /.*/}
-    end
+  resources :node_groups do
+  
+  
+      resources :nodes
+  end
 
-  map.resources :nodes,
-    :member => {
-      :hide => :put,
-      :unhide => :put,
-      :facts => :get,
-      :reports => :get},
-    :collection => {
-     :unreported => :get,
-     :no_longer_reporting => :get,
-     :hidden => :get,
-     :search => :get},
-    :requirements => {:id => /[^\/]+/}
+  resources :nodes do
+    collection do
+  get :search
+  get :unreported
+  get :no_longer_reporting
+  get :hidden
+  end
+    member do
+  get :reports
+  get :facts
+  put :hide
+  put :unhide
+  end
+  
+  end
 
-  map.resources :reports,
-    :collection => {
-      :search => :get,
-    }
+  resources :reports do
+    collection do
+  get :search
+  end
+  
+  
+  end
 
-  map.upload "reports/upload", :controller => :reports, :action => "upload", :conditions => { :method => :post }
-
-  map.release_notes '/release_notes', :controller => :pages, :action => :release_notes
-
-  map.root :controller => :pages, :action => :home
-
-  map.connect ':controller/:action/:id'
-  map.connect ':controller/:action/:id.:format'
+  match 'reports/upload' => 'reports#upload', :as => :upload, :via => post
+  match '/release_notes' => 'pages#release_notes', :as => :release_notes
+  match '/' => 'pages#home'
+  match '/:controller(/:action(/:id))'
 end
