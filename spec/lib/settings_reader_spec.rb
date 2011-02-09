@@ -26,6 +26,7 @@ FILE
   end
 
   it "should use values from settings.yml.example if settings.yml does not exist" do
+    File.stubs(:read).with {|filename| File.basename(filename) == "settings.yml"}.raises(Errno::ENOENT, 'No such file or directory')
     File.stubs(:read).with {|filename| File.basename(filename) == "settings.yml.example"}.returns(@sample_file)
     Rails.logger.expects(:info).with {|msg| msg =~ /Using default values for unspecified settings "bat" and "foo"/}
 
