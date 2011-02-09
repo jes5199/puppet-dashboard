@@ -14,10 +14,12 @@ class ResourceStatus < ActiveRecord::Base
   }
 
   scope :by_file_content, lambda {|content|
-    {
-      :conditions => ["resource_statuses.resource_type = 'File' AND resource_events.property = 'content' AND resource_events.previous_value = ?", "{md5}#{content}"],
-      :include => :events,
-    }
+    joins(:events).
+    where("resource_statuses.resource_type = 'File'
+           AND resource_events.property = 'content'
+           AND resource_events.previous_value = ?",
+          "{md5}#{content}".to_yaml # to_yaml because previous_value is stored as yaml in the db (via `serialize`)
+         )
   }
 
   scope :without_file_content, lambda {|content|
