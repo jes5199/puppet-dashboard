@@ -5,7 +5,7 @@ class Status
     @unchanged = datum["unchanged"].to_i
     @failed = datum["failed"].to_i
     @total = datum["total"].to_i
-    @start = Time.zone.parse(datum["start"])
+    @start = Time.zone.parse(datum["start"].to_s)
   end
 
   def self.latest(options={})
