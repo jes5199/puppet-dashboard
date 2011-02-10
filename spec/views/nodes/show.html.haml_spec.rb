@@ -6,11 +6,10 @@ describe "/nodes/show.html.haml" do
   describe "successful render" do
     before(:each) do
       @report = Report.generate!
-      assigns[:node] = @node = @report.node
+      @node = @report.node
       render
     end
 
-    specify { response.should be_success }
-    it { should have_tag('h2', /#{@node.name}/) }
+    it { rendered.should have_selector('h2', :content => @node.name) }
   end
 end

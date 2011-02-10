@@ -5,11 +5,11 @@ describe "/nodes/new.html.haml" do
 
   describe "successful render" do
     before :each do
-      assigns[:node] = @node = Node.spawn
+      @node = Node.spawn
+      params[:controller] = "nodes"
       render
     end
 
-    specify { response.should be_success }
-    it { should have_tag('form[method=post][action=?]', nodes_path) }
+    it { rendered.should have_selector('form[method=post]', :action => nodes_path) }
   end
 end
