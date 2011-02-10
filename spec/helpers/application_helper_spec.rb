@@ -49,20 +49,24 @@ describe ApplicationHelper do
  describe "#pagination_for" do
     before :each do
       @template.stubs(:url_for => 'someurl')
+      helper.stubs( :params => {:controller => 'group', :action => 'search'} )
     end
 
     context "when given paginated records" do
-      subject { helper.pagination_for([*(1..100)].paginate) }
+      it "should have a div" do
+        helper.pagination_for([*(1..100)].paginate).to_str.should have_selector('div.actionbar')
+      end
 
-      it { should have_tag('div.actionbar') }
-      it { should have_tag('a', /Next/) }
+      it "should have_selector" do
+        helper.pagination_for([*(1..100)].paginate).to_str.should have_selector('a', :content => 'Next')
+      end
     end
 
     context "when not given paginated records" do
       subject { helper.pagination_for([]) }
 
-      it { should have_tag('div.actionbar') }
-      it { should_not have_tag('a', /Next/) }
+      it { should have_selector('div.actionbar') }
+      it { should_not have_selector('a', :content => 'Next') }
     end
 
     describe "when rendering the page size control" do
@@ -71,7 +75,7 @@ describe ApplicationHelper do
           def self.per_page; 51 ; end
         end
         paginated_results = [foo.new].paginate
-        helper.pagination_for(paginated_results).should have_tag('a', /51/)
+        helper.pagination_for(paginated_results).should have_selector('a', :content => "51")
       end
 
       it "should render spans instead of links for the current pagination size" do
@@ -79,16 +83,16 @@ describe ApplicationHelper do
           def self.per_page; 51 ; end
         end
         paginated_results = [foo.new].paginate(:per_page => 100)
-        helper.pagination_for(paginated_results).should have_tag('span', /100/)
+        helper.pagination_for(paginated_results).should have_selector('span', :content => "100")
       end
 
       it "should render spans instead of links for the current pagination size supplied in the url" do
         foo = Class.new do
           def self.per_page; 51 ; end
         end
-        params[:per_page] = "all"
+        helper.stubs(:params).returns({:per_page => "all", :controller => 'group', :action => 'search'})
         paginated_results = [foo.new]
-        helper.pagination_for(paginated_results).should have_tag('span', /all/)
+        helper.pagination_for(paginated_results).should have_selector('span', :content => "all")
       end
 
 
@@ -98,7 +102,7 @@ describe ApplicationHelper do
 
   describe "#icon" do
     it "should return an image tag to an icon" do
-      helper.icon('foo').should have_tag('img[src=?]', image_path('icons/foo.png'))
+      helper.icon('foo').should have_selector("img[src=\"#{image_path('icons/foo.png')}\"]" )
     end
   end
 

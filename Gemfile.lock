@@ -60,6 +60,7 @@ GEM
     mocha (0.9.11)
       rake
     mysql2 (0.2.6)
+    nokogiri (1.4.4)
     polyglot (0.3.1)
     rack (1.2.1)
     rack-mount (0.6.13)
@@ -105,6 +106,10 @@ GEM
     treetop (1.4.9)
       polyglot (>= 0.3.1)
     tzinfo (0.3.24)
+    webrat (0.7.3)
+      nokogiri (>= 1.2.0)
+      rack (>= 1.0)
+      rack-test (>= 0.5.3)
     will_paginate (3.0.pre2)
 
 PLATFORMS
@@ -124,4 +129,5 @@ DEPENDENCIES
   rspec-rails (~> 2.4)
   ruby-debug
   shoulda
+  webrat
   will_paginate (~> 3.0.pre2)

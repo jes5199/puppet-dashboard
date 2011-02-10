@@ -5,6 +5,7 @@ gem 'haml'
 gem 'will_paginate', '~> 3.0.pre2'
 gem 'maruku'
 gem 'inherited_resources', '~> 1.2.1'
+gem 'webrat'
 
 gem 'jquery-rails', '>= 0.2.6'
 
