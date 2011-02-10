@@ -7,12 +7,12 @@ describe PaginateScopeHelper do
     end
 
     it "should pass in the per_page parameter" do
-      params[:per_page] = 2
+      helper.stubs(:params).returns({:per_page => 2, :controller => 'group', :action => 'search'})
       helper.paginate_scope([1,2,3]).per_page.should == 2
     end
 
     it "should use only one page if the per_page parameter is 'all'" do
-      params[:per_page] = 'all'
+      helper.stubs(:params).returns({:per_page => 'all', :controller => 'group', :action => 'search'})
       paginated_scope = helper.paginate_scope([1,2,3])
       paginated_scope.should be_a_kind_of(WillPaginate::Collection)
       paginated_scope.total_pages.should == 1
