@@ -5,11 +5,11 @@ describe "/node_groups/edit.html.haml" do
 
   describe "when successfully rendered" do
     before :each do
-      assigns[:node_group] = @node_group = NodeGroup.generate!
+      @node_group = NodeGroup.generate!
+      params[:controller] = "node_groups"
     end
 
-    specify { render; response.should be_a_success }
-    it { render; should have_tag('form[method=post][action=?]', node_group_path(@node_group)) }
+    it { render; rendered.should have_selector('form[method=post]', :action => node_group_path(@node_group)) }
 
     describe "in editing interface" do
       describe "for classes" do
@@ -17,15 +17,16 @@ describe "/node_groups/edit.html.haml" do
           @classes = Array.new(6) { NodeClass.generate! }
           @node_group.node_classes << @classes[0..2]
 
+          params[:controller] = 'node_groups'
           render
         end
 
         it 'should provide a means to edit the associated classes' do
-          response.should have_tag('input#node_class_ids')
+          response.should have_selector('input#node_class_ids')
         end
 
         it 'should show the associated classes' do
-          response.should have_tag('#tokenizer') do
+          response.should have_selector('#tokenizer') do
             struct = get_json_struct_for_token_list('#node_class_ids')
             struct.should have(3).items
 
@@ -41,15 +42,16 @@ describe "/node_groups/edit.html.haml" do
           @groups = Array.new(6) { NodeGroup.generate! }
           @node_group.node_groups << @groups[0..3]
 
+          params[:controller] = "groups"
           render
         end
 
         it 'should provide a means to edit the associated groups' do
-          response.should have_tag('input[id=node_group_ids]')
+          rendered.should have_selector('input[id=node_group_ids]')
         end
 
         it 'should show the associated groups' do
-          response.should have_tag('#tokenizer') do
+          rendered.should have_selector('#tokenizer') do
             struct = get_json_struct_for_token_list('#node_group_ids')
             struct.should have(4).items
 
@@ -61,7 +63,7 @@ describe "/node_groups/edit.html.haml" do
       end
 
       def get_json_struct_for_token_list(selector)
-        json = response.body[/'#{selector}'.+?prePopulate: (\[.*?\])/m, 1]
+        json = rendered[/'#{selector}'.+?prePopulate: (\[.*?\])/m, 1]
         ActiveSupport::JSON.decode(json)
       end
     end

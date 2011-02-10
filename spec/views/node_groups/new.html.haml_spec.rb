@@ -5,11 +5,11 @@ describe "/node_groups/new.html.haml" do
 
   describe "successful render" do
     before :each do
-      assigns[:node_group] = @node_group = NodeGroup.spawn
-      render
+      @node_group = NodeGroup.spawn
+      params[:controller] = "group"
+      render :template => 'node_groups/new.html.haml'
     end
 
-    specify { response.should be_a_success }
-    it { should have_tag('form[method=post][action=?]', node_groups_path) }
+    it { rendered.should have_selector('form', :method => 'post', :action => node_groups_path) }
   end
 end

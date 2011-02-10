@@ -5,7 +5,7 @@ describe "/node_classes/show.html.haml" do
 
   describe "successful render" do
     before :each do
-      assigns[:node_class] = @node_class = NodeClass.generate!
+      @node_class = NodeClass.generate!
       render
     end
 

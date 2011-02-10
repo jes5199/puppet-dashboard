@@ -6,7 +6,6 @@ describe "/statuses/_run_failure.html.haml" do
   describe "successful render" do
     specify do
       render
-      response.should be_success
     end
 
     it "should display the specified number of days of data" do
@@ -20,10 +19,9 @@ describe "/statuses/_run_failure.html.haml" do
 
       SETTINGS.stubs(:daily_run_history_length).returns(20)
 
-      assigns[:node] = @node
       render
 
-      response.should have_tag("tr.labels th", :count => 20)
+      rendered.should have_selector("tr.labels th", :count => 20)
     end
   end
 end

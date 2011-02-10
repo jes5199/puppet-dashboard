@@ -6,11 +6,10 @@ describe "/node_groups/_node_groups.html.haml" do
   describe "successful render" do
     before :each do
       @node_groups = assigns[:node_groups] = [NodeGroup.generate!]
-      render :locals => {:node_groups => @node_groups}
+      render :locals => {:node_groups => @node_groups}, :template => 'node_groups/_node_groups.html.haml'
     end
 
-    specify { response.should be_a_success }
-    it { should have_tag('.node_group', @node_groups.size) }
-    it { should have_tag("#node_group_#{@node_groups.first.id}") }
+    it { rendered.should have_selector('.node_group', :count => @node_groups.size) }
+    it { rendered.should have_selector("#node_group_#{@node_groups.first.id}") }
   end
 end

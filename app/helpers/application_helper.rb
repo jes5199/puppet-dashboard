@@ -255,7 +255,7 @@ module ApplicationHelper
       javascript << "  });\n"
     end
     javascript << "});"
-    return javascript
+    return javascript.html_safe
   end
 
   # Asynchronously loads data from a URL and injects it into the element specified. The

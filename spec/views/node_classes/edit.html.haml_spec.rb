@@ -5,11 +5,10 @@ describe "/node_classes/edit.html.haml" do
 
   describe "successful render" do
     before :each do
-      assigns[:node_class] = @node_class = NodeClass.generate!
+      @node_class = NodeClass.generate!
       render
     end
 
-    specify { response.should be_success }
-    it { should have_tag('form[method=?][action=?]', 'post', node_class_path(@node_class)) }
+    it { rendered.should have_selector('form', :method => 'post', :action => node_class_path(@node_class)) }
   end
 end
