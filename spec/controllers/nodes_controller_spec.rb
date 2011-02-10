@@ -18,7 +18,7 @@ describe NodesController do
       before { get :index, :format => "json" }
       specify { response.should be_success }
       it "should return JSON" do
-        struct = json_from_response_body
+        struct = ActiveSupport::JSON.decode(response.body)
         struct.size.should == 1
         struct.first["name"].should == @node.name
       end
@@ -34,7 +34,7 @@ describe NodesController do
           get :index, :format => "yaml"
 
           response.should be_success
-          struct = yaml_from_response_body
+          struct = YAML.load(response.body)
           struct.size.should == 1
           struct.first["name"].should == @node.name
         end
@@ -85,9 +85,7 @@ describe NodesController do
       it "should return JSON for an existing node" do
         get :show, :id => @node.name, :format => "json"
 
-        response.should be_success
-
-        struct = json_from_response_body
+        struct = ActiveSupport::JSON.decode(response.body)
         struct["name"].should == @node.name
       end
 
@@ -109,7 +107,7 @@ describe NodesController do
           get :show, :id => @node.name, :format => "yaml"
 
           response.should be_success
-          struct = yaml_from_response_body
+          struct = YAML.load(response.body)
           struct["name"].should == @node.name
         end
 
@@ -125,7 +123,7 @@ describe NodesController do
           get :show, :id => "nonexistent", :format => "yaml"
 
           response.should be_success
-          struct = yaml_from_response_body
+          struct = YAML.load(response.body)
           struct.should == {'classes' => []}
         end
       end
@@ -370,12 +368,8 @@ describe NodesController do
     end
 
     context "for HTML" do
-      before { get :reports, :node => 123 }
-
-      specify { response.should be_success }
-
-      it "should be paginated" do
-        assigns[:reports].should be_a_kind_of(WillPaginate::Collection)
+      it "should not explode" do
+        get :reports, :node => 123
       end
     end
   end
@@ -417,7 +411,7 @@ describe NodesController do
           end
 
           it "should return YAML" do
-            struct = yaml_from_response_body
+            struct = YAML.load(response.body)
             struct.size.should == 1
             struct.first["name"].should == "foo"
           end

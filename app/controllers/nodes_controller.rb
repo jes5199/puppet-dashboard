@@ -47,7 +47,12 @@ class NodesController < InheritedResources::Base
   def show
     begin
       raise NodeClassificationDisabledError.new if !SETTINGS.use_external_node_classification and request.format == :yaml
-      show!
+      @node = resource
+      respond_to do |format|
+        format.yaml { render :text => @node.to_yaml, :content_type => 'application/x-yaml' }
+        format.json { render :text => JSON.parse(@node.to_json)["node"].to_json, :content_type => 'application/x-json' }
+        format.html { render }
+      end
     rescue ActiveRecord::RecordNotFound => e
       raise e unless request.format == :yaml
       node = {'classes' => []}
@@ -129,6 +134,7 @@ class NodesController < InheritedResources::Base
 
       format.html { render :index }
       format.yaml { render :text => collection.to_yaml, :content_type => 'application/x-yaml' }
+      format.json { render :text => JSON.parse(collection.to_json).map{|j| j["node"]}.to_json, :content_type => 'application/x-json' }
     end
   end
 end
