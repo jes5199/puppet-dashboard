@@ -9,7 +9,6 @@ describe "/node_classes/show.html.haml" do
       render
     end
 
-    specify { response.should be_a_success }
-    it { should have_tag('h2', "Class:\n#{@node_class.name}") }
+    it { rendered.should have_selector('h2'){|h2| h2.first.text.should =~ /Class:\s+#{@node_class.name}/ } }
   end
 end
