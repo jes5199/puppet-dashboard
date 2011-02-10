@@ -6,10 +6,9 @@ describe "/reports/_report_status_td.html.haml" do
   describe "successful render" do
     before :each do
       assigns[:report] = @report = Report.generate!(:status => "changed")
-      render :locals => {:report => @report}
+      render :locals => {:report => @report}, :template => 'reports/_report_status_td.html.haml'
     end
 
-    specify { response.should be_success }
-    it { should have_tag('td.status.changed img[src=?]', /.+changed.+/) }
+    it { rendered.should have_selector('td.status.changed img'){|img| img.first[:src].should =~ /changed/ } }
   end
 end
