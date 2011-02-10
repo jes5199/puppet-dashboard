@@ -102,6 +102,7 @@ module ApplicationHelper
   # Return HTML with pagination controls for displaying an ActiveRecord +scope+.
   def pagination_for(scope, more_link=nil)
     content_tag(:div, :class => 'actionbar') do
+      #require 'ruby-debug'; debugger; true #DEBUG!
       pagination = if scope.respond_to?(:total_pages) && scope.total_pages > 1
         [
         more_link ? content_tag(:span, :class => 'pagination') { link_to('More &raquo;', more_link) } : will_paginate(scope),
@@ -187,7 +188,7 @@ module ApplicationHelper
   # Return HTML describing the search if one is present in params[:q].
   def describe_search_if_present
     if params[:q].present?
-      return "matching &ldquo;#{h params[:q]}&rdquo;"
+      return "matching &ldquo;#{h params[:q]}&rdquo;".html_safe
     end
   end
 

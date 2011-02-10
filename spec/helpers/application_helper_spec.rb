@@ -36,19 +36,19 @@ describe ApplicationHelper do
     it "should return a header for a form with a new record" do
       record = Node.spawn
       form = stub(:object => record)
-      helper.header_for(form).should have_text /Add node/
+      helper.header_for(form).should =~ /Add node/
     end
 
     it "should return a header for a form with an existing object" do
       record = Node.generate
       form = stub(:object => record)
-      helper.header_for(form).should have_text /Edit node/
+      helper.header_for(form).should =~ /Edit node/
     end
   end
 
  describe "#pagination_for" do
     before :each do
-      @template.stubs( :request => request, :params => params, :url_for => 'someurl')
+      @template.stubs(:url_for => 'someurl')
     end
 
     context "when given paginated records" do
@@ -132,7 +132,7 @@ describe ApplicationHelper do
 
   describe "#describe_search_if_present" do
     it "should describe an active search" do
-      params[:q] = 'foo'
+      helper.stubs(:params).returns({:q => 'foo'})
       helper.describe_search_if_present.should == 'matching &ldquo;foo&rdquo;'
     end
 
@@ -160,7 +160,7 @@ describe ApplicationHelper do
 
     context "when searching" do
       before :each do
-        params[:q] = 'query'
+        helper.stubs(:params).returns({:q => 'query'})
       end
 
       it "should return a message for the listing plus the search" do

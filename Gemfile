@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 gem 'rails', '3.0.3'
 gem 'haml'
-gem 'will_paginate'
+gem 'will_paginate', '~> 3.0.pre2'
 gem 'maruku'
 gem 'inherited_resources', '~> 1.2.1'
 
