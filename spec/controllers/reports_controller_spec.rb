@@ -69,13 +69,13 @@ describe ReportsController do
     it "should fail with a 403 error when disable_legacy_report_upload_url is true" do
       SETTINGS.stubs(:disable_legacy_report_upload_url).returns(true)
       response = post_with_body('create', @yaml, :content_type => 'application/x-yaml')
-      response.status.should == "403 Forbidden"
+      response.status.should == 403
     end
 
     it "should succeed when disable_legacy_report_upload_url is false" do
       SETTINGS.stubs(:disable_legacy_report_upload_url).returns(false)
       response = post_with_body('create', @yaml, :content_type => 'application/x-yaml')
-      response.status.should == "200 OK"
+      response.status.should == 200
     end
   end
 

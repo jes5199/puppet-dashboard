@@ -3,6 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 class InheritedFromApplicationController < ApplicationController
   def generic_action
     @time_zone = Time.zone
+    render :text => "yes."
   end
 end
 
