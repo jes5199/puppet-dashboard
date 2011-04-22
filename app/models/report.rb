@@ -71,8 +71,37 @@ class Report < ActiveRecord::Base
     attribute_hash
   end
 
+  def desymbolize_syck_map_keys!(syck)
+    if syck.is_a?(YAML::Syck::Seq) # arrays
+      syck.value.each do |entry|
+        desymbolize_syck_map_keys!(entry)
+      end
+      return
+    end
+
+    if syck.is_a?(YAML::Syck::Map)
+
+      syck.value.each do |key, value|
+        # if we don't have a type_id, then we're a regular hash and we allow symbol-ish keys
+        if syck.type_id and key.is_a?(YAML::Syck::Scalar)
+          key_as_string = key.transform.to_s
+          key.value = key_as_string
+        end
+
+        desymbolize_syck_map_keys!(value)
+      end
+
+    end
+  end
+
+  def load_from_yaml_more_safely(yaml)
+    syck = YAML.parse(yaml)
+    desymbolize_syck_map_keys!(syck)
+    syck.transform
+  end
+
   def self.create_from_yaml(report_yaml)
-    raw_report = YAML.load(report_yaml)
+    raw_report = load_from_yaml_more_safely(report_yaml)
 
     unless raw_report.is_a? Puppet::Transaction::Report
       raise ArgumentError, "The supplied report is in invalid format '#{raw_report.class}', expected 'Puppet::Transaction::Report'"
